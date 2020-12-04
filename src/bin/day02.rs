@@ -1,7 +1,7 @@
 use advent_of_code_2020::Input;
+use futures::stream::TryStreamExt;
 use std::str::FromStr;
 use std::{error, fmt};
-use tokio::stream::StreamExt;
 
 /// Split string into two at the given delimiter
 fn split1(s: &str, delimiter: char) -> Option<(&str, &str)> {
@@ -61,8 +61,8 @@ impl Password {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn error::Error>> {
-    let input = Input::day(2).await?.parsed_lines::<Password>();
-    let passwords = input.collect::<Result<Vec<Password>, _>>().await?;
+    let input = Input::day(2).await?;
+    let passwords: Vec<_> = input.parsed_lines::<Password>().try_collect().await?;
 
     let count = passwords.iter().filter(|p| p.is_valid()).count();
     println!("Number of valid password (old rules): {}", count);

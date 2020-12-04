@@ -6,5 +6,6 @@ description = "Solutions to the Advent of Code 2020 puzzles"
 edition = "2018"
 
 [dependencies]
+futures = "0.3"
 permutator = "0.4"
 tokio = { version = "0.3", features = ["fs", "io-util", "macros", "rt-multi-thread", "stream"] }
