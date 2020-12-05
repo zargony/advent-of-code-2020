@@ -1,30 +1,43 @@
 use advent_of_code_2020::Input;
-use futures::stream::{Stream, TryStreamExt};
-use std::{error, io};
+use std::{error, fmt};
+
+#[derive(Debug, PartialEq, Eq)]
+enum Tile {
+    Space,
+    Tree,
+}
+
+#[derive(Debug)]
+struct InvalidMapTile(char);
+
+impl fmt::Display for InvalidMapTile {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Invalid map tile `{}`", self.0)
+    }
+}
+
+impl error::Error for InvalidMapTile {}
 
 #[derive(Debug)]
 struct Map {
-    area: Vec<Vec<bool>>,
+    area: Vec<Vec<Tile>>,
 }
 
 impl Map {
-    async fn read(lines: impl Stream<Item = io::Result<impl AsRef<str>>>) -> io::Result<Self> {
-        let area: Vec<_> = lines
-            .and_then(|line| async move {
+    fn parse(lines: &[impl AsRef<str>]) -> Result<Self, InvalidMapTile> {
+        let area = lines
+            .iter()
+            .map(|line| {
                 line.as_ref()
                     .chars()
                     .map(|ch| match ch {
-                        '.' => Ok(false),
-                        '#' => Ok(true),
-                        ch => Err(io::Error::new(
-                            io::ErrorKind::Other,
-                            format!("Unexpected map field `{}`", ch),
-                        )),
+                        '.' => Ok(Tile::Space),
+                        '#' => Ok(Tile::Tree),
+                        ch => Err(InvalidMapTile(ch)),
                     })
-                    .collect()
+                    .collect::<Result<Vec<_>, _>>()
             })
-            .try_collect()
-            .await?;
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(Self { area })
     }
 
@@ -34,7 +47,7 @@ impl Map {
         while pos.0 + slope.0 < self.area.len() {
             pos = (pos.0 + slope.0, pos.1 + slope.1);
             let line = &self.area[pos.0];
-            if line[pos.1 % line.len()] {
+            if line[pos.1 % line.len()] == Tile::Tree {
                 count += 1;
             }
         }
@@ -49,10 +62,8 @@ impl Map {
     }
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn error::Error>> {
-    let input = Input::day(3).await?;
-    let map = Map::read(input.lines()).await?;
+fn main() -> Result<(), Box<dyn error::Error>> {
+    let map = Map::parse(&Input::day(3)?.lines()?)?;
 
     let count = map.count_trees_on_slope((1, 3));
     println!("Trees on slope: {}", count);
@@ -66,7 +77,6 @@ async fn main() -> Result<(), Box<dyn error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use futures::{stream, StreamExt};
 
     const INPUT: [&str; 11] = [
         "..##.......",
@@ -82,17 +92,15 @@ mod tests {
         ".#..#...#.#",
     ];
 
-    #[tokio::test]
-    async fn part_1() {
-        let lines = stream::iter(&INPUT).map(Ok);
-        let map = Map::read(lines).await.unwrap();
+    #[test]
+    fn part_1() {
+        let map = Map::parse(&INPUT).unwrap();
         assert_eq!(map.count_trees_on_slope((1, 3)), 7);
     }
 
-    #[tokio::test]
-    async fn part_2() {
-        let lines = stream::iter(&INPUT).map(Ok);
-        let map = Map::read(lines).await.unwrap();
+    #[test]
+    fn part_2() {
+        let map = Map::parse(&INPUT).unwrap();
         assert_eq!(
             map.product_trees_on_slopes(&[(1, 1), (1, 3), (1, 5), (1, 7), (2, 1)]),
             336

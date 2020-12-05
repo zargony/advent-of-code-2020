@@ -1,5 +1,4 @@
 use advent_of_code_2020::Input;
-use futures::stream::TryStreamExt;
 use permutator::copy::k_permutation;
 use std::error;
 
@@ -14,10 +13,8 @@ fn product_of_summands(numbers: &[u32], sum: u32, k: usize) -> Option<u64> {
     res
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn error::Error>> {
-    let input = Input::day(1).await?;
-    let numbers: Vec<_> = input.parsed_lines::<u32>().try_collect().await?;
+fn main() -> Result<(), Box<dyn error::Error>> {
+    let numbers: Vec<u32> = Input::day(1)?.parsed_lines()?;
 
     let product = product_of_summands(&numbers, 2020, 2).unwrap();
     println!("Product of 2 entries that sum up to 2020: {}", product);
