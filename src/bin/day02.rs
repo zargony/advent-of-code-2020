@@ -83,7 +83,11 @@ mod tests {
 
     #[test]
     fn part_1() {
-        let passwords: Vec<Password> = INPUT.iter().map(|s| s.parse().unwrap()).collect();
+        let passwords: Vec<Password> = INPUT
+            .iter()
+            .map(|s| s.parse())
+            .collect::<Result<_, _>>()
+            .unwrap();
         assert!(passwords[0].is_valid());
         assert!(!passwords[1].is_valid());
         assert!(passwords[2].is_valid());
@@ -92,7 +96,11 @@ mod tests {
 
     #[test]
     fn part_2() {
-        let passwords: Vec<Password> = INPUT.iter().map(|s| s.parse().unwrap()).collect();
+        let passwords: Vec<Password> = INPUT
+            .iter()
+            .map(|s| s.parse())
+            .collect::<Result<_, _>>()
+            .unwrap();
         assert!(passwords[0].is_valid_new());
         assert!(!passwords[1].is_valid_new());
         assert!(!passwords[2].is_valid_new());
