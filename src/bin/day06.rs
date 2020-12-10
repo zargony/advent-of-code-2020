@@ -1,18 +1,12 @@
 use advent_of_code_2020::Input;
 use std::collections::HashSet;
+use std::error;
 use std::str::FromStr;
-use std::{error, fmt};
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
+#[error("Invalid answer")]
 struct InvalidAnswer;
-
-impl fmt::Display for InvalidAnswer {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Invalid answer")
-    }
-}
-
-impl error::Error for InvalidAnswer {}
 
 #[derive(Debug)]
 struct GroupAnswers {

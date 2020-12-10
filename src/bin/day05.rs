@@ -1,17 +1,11 @@
 use advent_of_code_2020::Input;
+use std::error;
 use std::str::FromStr;
-use std::{error, fmt};
+use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
+#[error("Invalid seat")]
 struct InvalidSeat;
-
-impl fmt::Display for InvalidSeat {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Invalid seat")
-    }
-}
-
-impl error::Error for InvalidSeat {}
 
 #[derive(Debug, PartialOrd, Ord, PartialEq, Eq)]
 struct SeatNumber(usize);

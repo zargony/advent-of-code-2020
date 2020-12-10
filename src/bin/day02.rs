@@ -1,6 +1,7 @@
 use advent_of_code_2020::Input;
+use std::error;
 use std::str::FromStr;
-use std::{error, fmt};
+use thiserror::Error;
 
 /// Split string into two at the given delimiter
 fn split1(s: &str, delimiter: char) -> Option<(&str, &str)> {
@@ -8,16 +9,9 @@ fn split1(s: &str, delimiter: char) -> Option<(&str, &str)> {
     Some((s[..pos].trim(), s[pos + 1..].trim()))
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
+#[error("Password parse error")]
 struct PasswordParseError;
-
-impl fmt::Display for PasswordParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Password parse error")
-    }
-}
-
-impl error::Error for PasswordParseError {}
 
 #[derive(Debug)]
 struct Password {

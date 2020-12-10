@@ -1,5 +1,6 @@
 use advent_of_code_2020::Input;
-use std::{error, fmt};
+use std::error;
+use thiserror::Error;
 
 #[derive(Debug, PartialEq, Eq)]
 enum Tile {
@@ -7,16 +8,9 @@ enum Tile {
     Tree,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
+#[error("Invalid map tile `{0}`")]
 struct InvalidMapTile(char);
-
-impl fmt::Display for InvalidMapTile {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Invalid map tile `{}`", self.0)
-    }
-}
-
-impl error::Error for InvalidMapTile {}
 
 #[derive(Debug)]
 struct Map {
