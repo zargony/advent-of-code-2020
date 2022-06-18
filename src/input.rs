@@ -106,7 +106,7 @@ impl<I: Iterator<Item = io::Result<String>>> Iterator for Blocks<I> {
     type Item = io::Result<String>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let block = (&mut self.0)
+        (&mut self.0)
             .take_while(|res| match res {
                 Ok(line) if line.trim().is_empty() => false,
                 Ok(_line) => true,
@@ -121,8 +121,7 @@ impl<I: Iterator<Item = io::Result<String>>> Iterator for Blocks<I> {
                 }
                 (Some(Err(e)), _) => Some(Err(e)),
                 (_, Err(e)) => Some(Err(e)),
-            });
-        block
+            })
     }
 }
 

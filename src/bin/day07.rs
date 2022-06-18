@@ -76,7 +76,7 @@ impl From<Vec<Rule>> for RuleSet {
             for (_c, b) in &rule.contains {
                 contained
                     .entry(b.clone())
-                    .or_insert_with(|| HashSet::new())
+                    .or_insert_with(HashSet::new)
                     .insert(rule.bag.clone());
             }
             contains.insert(rule.bag, rule.contains);
@@ -94,7 +94,7 @@ impl RuleSet {
             .contained
             .get(&Bag::from(bag))
             .map(Clone::clone)
-            .unwrap_or(HashSet::new());
+            .unwrap_or_default();
         if deep {
             let deep_bags = bags
                 .iter()

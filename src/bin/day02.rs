@@ -31,7 +31,7 @@ impl FromStr for Password {
         Ok(Self {
             min: min.parse().map_err(|_e| PasswordParseError)?,
             max: max.parse().map_err(|_e| PasswordParseError)?,
-            ch: ch.chars().nth(0).ok_or(PasswordParseError)?,
+            ch: ch.chars().next().ok_or(PasswordParseError)?,
             password: password.into(),
         })
     }

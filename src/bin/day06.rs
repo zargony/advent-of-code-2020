@@ -26,7 +26,7 @@ impl FromStr for GroupAnswers {
             any.extend(answers.chars());
             every.extend(answers.chars());
         }
-        while let Some(line) = lines.next() {
+        for line in lines {
             let answers: String = line.chars().filter(|ch| !ch.is_whitespace()).collect();
             any.extend(answers.chars());
             every.retain(|ch| answers.contains(*ch));
@@ -39,7 +39,7 @@ impl GroupAnswers {
     #[allow(dead_code)]
     fn any_answers(&self) -> String {
         let mut answers: Vec<char> = self.any.iter().copied().collect();
-        answers.sort();
+        answers.sort_unstable();
         answers.iter().collect()
     }
 
@@ -50,7 +50,7 @@ impl GroupAnswers {
     #[allow(dead_code)]
     fn every_answers(&self) -> String {
         let mut answers: Vec<char> = self.every.iter().copied().collect();
-        answers.sort();
+        answers.sort_unstable();
         answers.iter().collect()
     }
 

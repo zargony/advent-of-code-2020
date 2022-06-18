@@ -61,6 +61,7 @@ impl FromStr for Passport {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct StrictPassport {
     byr: String,
     iyr: String,
@@ -87,7 +88,7 @@ impl FromStr for StrictPassport {
             static ref RE_PID: Regex = Regex::new(r#"^[0-9]{9}$"#).unwrap();
         }
         fn check(re: &Regex, s: String) -> Result<String, InvalidPassport> {
-            Some(s).filter(|s| re.is_match(&s)).ok_or(InvalidPassport)
+            Some(s).filter(|s| re.is_match(s)).ok_or(InvalidPassport)
         }
 
         let passport = Passport::from_str(s)?;
@@ -131,9 +132,9 @@ mod tests {
     fn part_1() {
         let passports: Vec<Result<Passport, _>> = INPUT_1.iter().map(|s| s.parse()).collect();
         assert!(passports[0].is_ok());
-        assert!(!passports[1].is_ok());
+        assert!(passports[1].is_err());
         assert!(passports[2].is_ok());
-        assert!(!passports[3].is_ok());
+        assert!(passports[3].is_err());
         assert_eq!(passports.iter().filter(|p| p.is_ok()).count(), 2);
     }
 
@@ -151,10 +152,10 @@ mod tests {
     #[test]
     fn part_2() {
         let passports: Vec<Result<StrictPassport, _>> = INPUT_2.iter().map(|s| s.parse()).collect();
-        assert!(!passports[0].is_ok());
-        assert!(!passports[1].is_ok());
-        assert!(!passports[2].is_ok());
-        assert!(!passports[3].is_ok());
+        assert!(passports[0].is_err());
+        assert!(passports[1].is_err());
+        assert!(passports[2].is_err());
+        assert!(passports[3].is_err());
         assert!(passports[4].is_ok());
         assert!(passports[5].is_ok());
         assert!(passports[6].is_ok());

@@ -8,5 +8,5 @@ edition = "2018"
 [dependencies]
 lazy_static = "1.4"
 permutator = "0.4"
-regex = "1.4"
+regex = "1.5"
 thiserror = "1.0"

@@ -18,16 +18,16 @@ impl FromStr for SeatNumber {
         let mut row = 0..128;
         for _ in 0..7 {
             match chars.next() {
-                Some('F') => row.end = row.end - row.len() / 2,
-                Some('B') => row.start = row.start + row.len() / 2,
+                Some('F') => row.end -= row.len() / 2,
+                Some('B') => row.start += row.len() / 2,
                 _ => return Err(InvalidSeat),
             }
         }
         let mut column = 0..8;
         for _ in 0..3 {
             match chars.next() {
-                Some('L') => column.end = column.end - column.len() / 2,
-                Some('R') => column.start = column.start + column.len() / 2,
+                Some('L') => column.end -= column.len() / 2,
+                Some('R') => column.start += column.len() / 2,
                 _ => return Err(InvalidSeat),
             }
         }
